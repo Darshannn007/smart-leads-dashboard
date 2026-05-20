@@ -128,60 +128,64 @@ export default function LeadsSection() {
   };
 
   return (
-    <section className="w-full text-left">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="!mb-0">Your leads</h2>
-        <button
-          type="button"
-          onClick={openCreateModal}
-          className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-        >
+    <section className="animate-in space-y-5 text-left">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2>Leads</h2>
+          <p className="mt-0.5 text-sm text-[var(--text)]">
+            Manage and track your sales pipeline
+          </p>
+        </div>
+        <button type="button" onClick={openCreateModal} className="ui-btn-primary">
           + Add lead
         </button>
       </div>
 
-      <LeadsFilters
-        search={searchInput}
-        status={filters.status}
-        source={sourceInput}
-        sortBy={filters.sortBy}
-        order={filters.order}
-        onSearchChange={(v) => {
-          setSearchInput(v);
-          updateFilters({ page: 1 });
-        }}
-        onStatusChange={(v) => updateFilters({ status: v, page: 1 })}
-        onSourceChange={(v) => {
-          setSourceInput(v);
-          updateFilters({ page: 1 });
-        }}
-        onSortByChange={(v) => updateFilters({ sortBy: v, page: 1 })}
-        onOrderChange={(v) => updateFilters({ order: v, page: 1 })}
-      />
+      <div className="ui-card p-4 sm:p-5">
+        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[var(--text)]">
+          Filters
+        </p>
+        <LeadsFilters
+          search={searchInput}
+          status={filters.status}
+          source={sourceInput}
+          sortBy={filters.sortBy}
+          order={filters.order}
+          onSearchChange={(v) => {
+            setSearchInput(v);
+            updateFilters({ page: 1 });
+          }}
+          onStatusChange={(v) => updateFilters({ status: v, page: 1 })}
+          onSourceChange={(v) => {
+            setSourceInput(v);
+            updateFilters({ page: 1 });
+          }}
+          onSortByChange={(v) => updateFilters({ sortBy: v, page: 1 })}
+          onOrderChange={(v) => updateFilters({ order: v, page: 1 })}
+        />
+      </div>
 
       {isError && (
-        <p className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-          {getErrorMessage(error, "Failed to load leads")}
-        </p>
+        <p className="ui-alert-error">{getErrorMessage(error, "Failed to load leads")}</p>
       )}
 
-      <div className="mt-4">
+      <div className="ui-card overflow-hidden">
         <LeadsTable
           leads={leads}
           loading={isLoading}
           onEdit={openEditModal}
           onDelete={handleDelete}
+          onAddLead={openCreateModal}
         />
+        {!isLoading && leads.length > 0 && (
+          <Pagination
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            onPageChange={(page) => updateFilters({ page })}
+          />
+        )}
       </div>
-
-      {!isLoading && leads.length > 0 && (
-        <Pagination
-          page={pagination.page}
-          totalPages={pagination.totalPages}
-          total={pagination.total}
-          onPageChange={(page) => updateFilters({ page })}
-        />
-      )}
 
       <LeadFormModal
         open={modalOpen}

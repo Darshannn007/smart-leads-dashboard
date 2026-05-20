@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login, saveAuth } from "../api/auth";
 import { isAxiosError } from "axios";
+import AuthLayout from "../components/ui/AuthLayout";
+import { Field, TextInput } from "../components/ui/Field";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,8 +23,7 @@ export default function Login() {
       navigate("/dashboard");
     } catch (err) {
       const message = isAxiosError(err)
-        ? (err.response?.data as { message?: string })?.message ||
-          "Login failed"
+        ? (err.response?.data as { message?: string })?.message || "Login failed"
         : "Something went wrong";
       setError(message);
     } finally {
@@ -31,64 +32,42 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-1 flex-col justify-center px-6 py-16">
-      <h1 className="!mt-0">Welcome back</h1>
-      <p className="mb-8 text-[var(--text)]">Sign in to your account</p>
+    <AuthLayout
+      title="Welcome back"
+      subtitle="Sign in to manage your leads"
+      footerText="No account?"
+      footerLink="/register"
+      footerLinkText="Create one"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
+        {error && <p className="ui-alert-error">{error}</p>}
 
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto w-full max-w-sm space-y-4 text-left"
-      >
-        {error && (
-          <p className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-            {error}
-          </p>
-        )}
-
-        <label className="block">
-          <span className="mb-1 block text-sm text-[var(--text-h)]">Email</span>
-          <input
+        <Field label="Email">
+          <TextInput
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text-h)] outline-none focus:border-[var(--accent-border)]"
             placeholder="you@email.com"
+            autoComplete="email"
           />
-        </label>
+        </Field>
 
-        <label className="block">
-          <span className="mb-1 block text-sm text-[var(--text-h)]">
-            Password
-          </span>
-          <input
+        <Field label="Password">
+          <TextInput
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-[var(--text-h)] outline-none focus:border-[var(--accent-border)]"
             placeholder="••••••••"
+            autoComplete="current-password"
           />
-        </label>
+        </Field>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-md bg-[var(--accent)] px-4 py-2.5 font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-        >
+        <button type="submit" disabled={loading} className="ui-btn-primary w-full py-2.5">
           {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>
-
-      <p className="mt-6 text-sm text-[var(--text)]">
-        No account?{" "}
-        <Link
-          to="/register"
-          className="text-[var(--accent)] underline-offset-2 hover:underline"
-        >
-          Create one
-        </Link>
-      </p>
-    </div>
+    </AuthLayout>
   );
 }

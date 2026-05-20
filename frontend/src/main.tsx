@@ -18,7 +18,18 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "var(--card)",
+            color: "var(--text-h)",
+            border: "1px solid var(--border)",
+            fontSize: "0.875rem",
+          },
+          success: { iconTheme: { primary: "#8b5cf6", secondary: "#fff" } },
+        }}
+      />
     </QueryClientProvider>
   </StrictMode>
 );

@@ -12,16 +12,19 @@ export default function Pagination({
   onPageChange,
 }: PaginationProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 pt-4 text-sm text-[var(--text)]">
-      <span>
-        {total} lead{total !== 1 ? "s" : ""} · Page {page} of {totalPages}
+    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border)] px-4 py-3 text-sm">
+      <span className="text-[var(--text)]">
+        Showing page <span className="font-medium text-[var(--text-h)]">{page}</span> of{" "}
+        <span className="font-medium text-[var(--text-h)]">{totalPages}</span>
+        <span className="mx-2 text-[var(--border)]">·</span>
+        {total} lead{total !== 1 ? "s" : ""} total
       </span>
       <div className="flex gap-2">
         <button
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="rounded-md border border-[var(--border)] px-3 py-1.5 disabled:opacity-40 hover:bg-[var(--accent-bg)]"
+          className="ui-btn-secondary !py-1.5 !px-3"
         >
           Previous
         </button>
@@ -29,7 +32,7 @@ export default function Pagination({
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="rounded-md border border-[var(--border)] px-3 py-1.5 disabled:opacity-40 hover:bg-[var(--accent-bg)]"
+          className="ui-btn-secondary !py-1.5 !px-3"
         >
           Next
         </button>
